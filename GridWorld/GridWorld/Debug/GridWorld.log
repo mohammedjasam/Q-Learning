@@ -1,5 +1,3 @@
 ﻿  World.cpp
-c:\users\stark\source\repos\gridworld\gridworld\world.cpp(12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  GridWorld.cpp
-  Generating Code...
-  GridWorld.vcxproj -> C:\Users\Stark\source\repos\GridWorld\Debug\GridWorld.exe
+c:\users\stark\source\repos\q-learning\gridworld\gridworld\world.cpp(74): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  GridWorld.vcxproj -> C:\Users\Stark\source\repos\Q-Learning\GridWorld\Debug\GridWorld.exe

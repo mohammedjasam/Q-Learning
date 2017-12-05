@@ -9,7 +9,10 @@ using namespace std;
 // Global variables
 static bool IS_THERE_DONUT_ON_MAP = false;
 
-
+struct location
+{
+	int x, y;
+};
 
 // function definitions
 void World();
