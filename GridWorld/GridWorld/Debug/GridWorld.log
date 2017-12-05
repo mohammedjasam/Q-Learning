@@ -1,3 +1,4 @@
 ﻿  World.cpp
-c:\users\stark\source\repos\q-learning\gridworld\gridworld\world.cpp(74): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\stark\source\repos\q-learning\gridworld\gridworld\world.cpp(25): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\stark\source\repos\q-learning\gridworld\gridworld\world.cpp(67): warning C4715: 'PlaceDonut': not all control paths return a value
   GridWorld.vcxproj -> C:\Users\Stark\source\repos\Q-Learning\GridWorld\Debug\GridWorld.exe
