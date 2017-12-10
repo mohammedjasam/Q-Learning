@@ -15,6 +15,7 @@ Q = [] # 2D Array to store States and their Actions
 H = 10 # Height of the Map
 W = 10 # Width of the Map
 Map = [] # The 2D array to store the Map of the basement
+Policy = []
 DonutPresentOnMap = False # Bool value to keep track of the presence of donut
 
 
@@ -66,6 +67,7 @@ Map[2][2] = "W";
 Map[3][2] = "W";
 Map[4][2] = "W";
 
+Policy = Map[:]
 
 # Dropping Tim into the Map!
 Map[X][Y] = "T"
@@ -89,7 +91,20 @@ def PrintQ():
             print(str(Q[i][j]) + "   ", end='')
         print()
 
-"""__________________QLEARNING MODULES___________________"""
+# This function will extract the best action for the state to print the policy
+def PrintPolicy():
+    for i in range(H):
+        for j in range(W):
+            if not (Policy[i][j] == "W"):
+                S = 10 * i + j
+                MaxQValue, Action = getStateProperties(Q[S])
+                ActionMap = {0 : "^", 1 : "<", 2 : "v", 3 : ">"} # Top, Left, Down, Right
+                Policy[i][j] = ActionMap[Action]
+            print(Policy[i][i] + "   ", end='')
+        print("\n")
+
+
+"""__________________Q-LEARNING MODULES___________________"""
 
 # This function returns the properties of the State requested!
 def getStateProperties(State):
@@ -115,13 +130,12 @@ def SpawnDonut():
     if DonutPresentOnMap == False:
         Probability = random.randint(0, 100)
 
-
         if Probability < 25:
             MapCorners = {0 : [1, 1], 1 : [1, 8], 2 : [8, 1], 3 : [8, 8]} # Dict with Possible corners on the map
             CornerProb = random.randint(0, 3) # Choosing which corner to spawn the donut at
 
             Location = MapCorners[CornerProb]
-            CornerDrop(Location[0], Location[1])
+            CornerDrop(Location[0], Location[1]) # This function spwans the donut on map
             DonutPresentOnMap = True
 
 
@@ -137,7 +151,8 @@ def main():
     iterations = 0
     while(not DonutPresentOnMap):
         SpawnDonut()
-    PrintMap() # Prints the Map
+    # PrintMap() # Prints the Map
+    PrintPolicy()
     # PrintQ() # Prints the Q Matrix
     # while(True):
     #     SpawnDonut() # This functions spawns donut with 0.25 prob in 1 of 4 corners
