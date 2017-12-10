@@ -1,6 +1,6 @@
 import sys
 import random
-
+from decimal import Decimal
 
 """__________________GLOBAL VARIABLES__________________"""
 
@@ -22,6 +22,14 @@ Tiles = [[1, 3], [2, 7], [3, 4], [5, 2], [6, 5], [6, 7], [7, 2]]
 # Tinny Tim
 X = 4 # Initial X Coordinate
 Y = 4 # Initial Y Coordinate
+
+REWARD_GAINED = 0
+"""__________________END OF GLOBAL VARIABLES__________________"""
+
+
+
+
+
 
 
 """__________________INITIALIZATIONS___________________"""
@@ -88,6 +96,8 @@ Walls.append([8,4])
 Map[X][Y] = "T"
 
 """__________________END OF INITIALIZATIONS___________________"""
+
+
 
 
 
@@ -177,7 +187,7 @@ def MoveTim():
     else:
         Directions.remove(Action)
         NewMove = random.randint(0, 2)
-        print("New Move is : " + NewMove)
+        # print("New Move is : " + str(NewMove))
         A = Directions[NewMove]
 
     # Moving Tim!
@@ -189,6 +199,7 @@ def MoveTim():
         Reward += MoveDown()
     elif A == 3:
         Reward += MoveRight()
+
     Map[X][Y] = "T"
 
     Reward += CheckForDonut()
@@ -201,10 +212,18 @@ def MoveTim():
 """__________________END OF TINNY-TIM MODULES___________________"""
 
 
+
+
+
+
+
 """__________________Q-LEARNING MODULES___________________"""
 
 # This function updates the Q-Matrix based on New and Old State and Actions along with Rewards, Alpha and Discount Factor
 def UpdateQMatrix(S, S_Dash, A, Reward):
+    global REWARD_GAINED
+    REWARD_GAINED += Reward
+
     global Q
     MaxQValue, Action = getStateProperties(Q[S_Dash])
     Q[S][A] = Q[S][A] + Alpha * (Reward + DiscountFactor * MaxQValue - Q[S][A])
@@ -220,6 +239,13 @@ def getStateProperties(State):
             Action = i
     return MaxQValue, Action
 """__________________END OF Q-LEARNING MODULES___________________"""
+
+
+
+
+
+
+
 
 """__________________MAP MODULES___________________"""
 # Spawn at corners
@@ -244,6 +270,14 @@ def SpawnDonut():
             DonutPresentOnMap = True
 """__________________END OF MAP MODULES___________________"""
 
+
+
+
+
+
+
+
+
 """__________________OUTPUT MODULES___________________"""
 
 # This function prints the Map on the screen
@@ -257,7 +291,7 @@ def PrintMap():
 def PrintQ():
     for i in range(States):
         for j in range(Actions):
-            print(str(Q[i][j]) + "   ", end='')
+            print(str(round(Q[i][j], 7)) + "   ", end='')
         print()
 
 # This function will extract the best action for the state to print the policy
@@ -275,26 +309,40 @@ def PrintPolicy():
 """__________________END OF OUTPUT MODULES___________________"""
 
 
+
+
+
+
+
+
+
 """_______________________MAIN MODULE________________________"""
 
 def main():
     iterations = 0
-    while(not DonutPresentOnMap):
-        SpawnDonut() # Drops donut into the basement in one of 4 corners
-    PrintMap() # Prints the Map
-    print("\n\n")
-    PrintPolicy() # Prints the PolicyMap
-    PrintQ() # Prints the Q Matrix
-    # while(True):
-    #     SpawnDonut() # This functions spawns donut with 0.25 prob in 1 of 4 corners
-    #     MoveTim() # This function moves TinnyTim based on the Policy
-    #
-    #     if (iterations % 100000000 == 0):
-    #         print( str(iterations*100000000/1000000000) + " Billion iterations completed!")
-    #         PrintMap()
-    #     iterations +=1 # Incrementing the i value!
+
+    while(True):
+        SpawnDonut() # This functions spawns donut with 0.25 prob in 1 of 4 corners
+        MoveTim() # This function moves TinnyTim based on the Policy
+        c = 0
+        if (iterations % 1000000 == 0):
+            print( str(iterations * 100000000/1000000000) + " Billion iterations completed!")
+            # PrintMap()
+            print("\n\n")
+            PrintPolicy()
+            print("\n\n")
+            PrintQ()
+            c+=1
+            if c % 10 == 0:
+                break
+
+
+        iterations +=1 # Incrementing the i value!
 
 """_______________________END OF MAIN MODULE________________________"""
+
+
+
 
 
 
