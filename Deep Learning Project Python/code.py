@@ -5,8 +5,8 @@ from decimal import Decimal
 """__________________GLOBAL VARIABLES__________________"""
 
 # Q-Learning
-Alpha = 0.2 # Learning rate (FIXED NOW)
-DiscountFactor = 0.7 # Considers discounted rewards after time t
+Alpha = 0.7 # Learning rate (FIXED NOW)
+DiscountFactor = 0.9 # Considers discounted rewards after time t
 States = 100
 Actions = 4 # Top, Left, Down, Right
 Q = [] # 2D Array to store States and their Actions
@@ -284,39 +284,49 @@ def SpawnDonut():
 
 # This function prints the Map on the screen
 def PrintMap():
+    print("   The Basement is:")
+    print("   ________________\n")
     for i in range(H):
         for j in range(W):
-            print(Map[i][j] + "   ", end='')
+            print( "   " + Map[i][j], end='')
         print("\n")
 
 # This function prints the Q values for each state and its actions
 def PrintQ():
+
     for i in range(States):
         for j in range(Actions):
-            print(str(round(Q[i][j], 7)) + "   ", end='')
+            print( "   " + str(round(Q[i][j], 7)), end='')
         print()
 
 # This function will extract the best action for the state to print the policy
 def PrintPolicy():
+    print("   The Policy is:")
+    print("   ______________\n")
     for i in range(H):
         for j in range(W):
             if [i,j] not in Walls:
                 S = 10 * i + j
                 MaxQValue, Action = getStateProperties(Q[S])
                 ActionMap = {0 : "^", 1 : "<", 2 : "v", 3 : ">"} # Top, Left, Down, Right
-                print(ActionMap[Action] + "   ", end='')
+                print("   " + ActionMap[Action], end='')
             else:
-                print("W" + "   ", end='')
+                print("   " + "W", end='')
         print("\n")
 
 # This function pulls out the expected reward of each cell in the grid
 def PrintExpectedReward():
+    print("   The Expected Reward is:")
+    print("   _______________________\n")
     for i in range(States):
         if i % 10 == 0:
             print()
         MaxQValue, Action = getStateProperties(Q[i])
+        if MaxQValue == 1000:
+            print('{:>15}'.format("##########"), end="")
+        else:
+            print('{:>15}'.format(str(round(MaxQValue,7))), end="")
 
-        print(MaxQValue)
 """__________________END OF OUTPUT MODULES___________________"""
 
 
@@ -330,24 +340,26 @@ def PrintExpectedReward():
 """_______________________MAIN MODULE________________________"""
 
 def main():
-    iterations = 0
+    iterations = 1
 
     while(True):
         # print(DonutPresentOnMap)
         SpawnDonut() # This functions spawns donut with 0.25 prob in 1 of 4 corners
         MoveTim() # This function moves TinnyTim based on the Policy
         c = 0
-        if (iterations % 1000000 == 0):
-            print( str(iterations) + "  iterations completed!")
-            PrintMap()
+        if (iterations % 5000000 == 0):
+            print( "\n"+str(iterations) + "  iterations completed!")
+            # PrintMap()
             print("\n\n")
             PrintPolicy()
             print("\n\n")
             # PrintQ()
             PrintExpectedReward()
             c += 1
-            if c % 10 == 0:
+
+            if c == 2:
                 break
+            break
         iterations +=1 # Incrementing the i value!
         # print(REWARD_GAINED)
 
@@ -360,5 +372,5 @@ def main():
 
 
 
-""" THIS IS WHERE THE EXECUTION BEGINDS """
+""" THIS IS WHERE THE EXECUTION BEGINS """
 main() # Calls  the main function which runs the whole program!
