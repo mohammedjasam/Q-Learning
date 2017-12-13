@@ -5,10 +5,10 @@ from decimal import Decimal
 """__________________GLOBAL VARIABLES__________________"""
 
 # Q-Learning
-Alpha = 0.1 # Learning rate (FIXED NOW)
-DiscountFactor = 0.1 # Considers discounted rewards after time t
+Alpha = 0.2 # Learning rate (FIXED NOW)
+DiscountFactor = 0.7 # Considers discounted rewards after time t
 States = 100
-Actions = 4
+Actions = 4 # Top, Left, Down, Right
 Q = [] # 2D Array to store States and their Actions
 
 # Map
@@ -25,7 +25,6 @@ Y = 4 # Initial Y Coordinate
 
 REWARD_GAINED = 0
 """__________________END OF GLOBAL VARIABLES__________________"""
-
 
 
 
@@ -175,7 +174,8 @@ def MoveTim():
     global Map, X, Y
 
     Reward = 0
-    S = 10 * X + Y
+
+    S = 10 * X + Y # State before moving
     Directions = [0, 1, 2, 3]
 
     MaxQValue, Action = getStateProperties(Q[S])
@@ -200,12 +200,12 @@ def MoveTim():
     elif A == 3:
         Reward += MoveRight()
 
-    Map[X][Y] = "T"
-
     Reward += CheckForDonut()
+
+    Map[X][Y] = "T"
     Reward += CheckForFallingTiles()
 
-    S_Dash = 10 * X + Y
+    S_Dash = 10 * X + Y  # State after moving
 
     UpdateQMatrix(S, S_Dash, A, Reward)
 
@@ -258,7 +258,7 @@ def CornerDrop(x, y):
 # This function Spawns Donut with a probability of 0.25 on the map in on of the four corners
 def SpawnDonut():
     global DonutPresentOnMap
-    if DonutPresentOnMap == False:
+    if DonutPresentOnMap == False: # IF there is no donut on Map
         Probability = random.randint(0, 100)
 
         if Probability < 25:
@@ -268,6 +268,8 @@ def SpawnDonut():
             Location = MapCorners[CornerProb]
             CornerDrop(Location[0], Location[1]) # This function spwans the donut on map
             DonutPresentOnMap = True
+
+
 """__________________END OF MAP MODULES___________________"""
 
 
@@ -306,6 +308,15 @@ def PrintPolicy():
             else:
                 print("W" + "   ", end='')
         print("\n")
+
+# This function pulls out the expected reward of each cell in the grid
+def PrintExpectedReward():
+    for i in range(States):
+        if i % 10 == 0:
+            print()
+        MaxQValue, Action = getStateProperties(Q[i])
+
+        print(MaxQValue)
 """__________________END OF OUTPUT MODULES___________________"""
 
 
@@ -322,22 +333,23 @@ def main():
     iterations = 0
 
     while(True):
+        # print(DonutPresentOnMap)
         SpawnDonut() # This functions spawns donut with 0.25 prob in 1 of 4 corners
         MoveTim() # This function moves TinnyTim based on the Policy
         c = 0
         if (iterations % 1000000 == 0):
-            print( str(iterations * 100000000/1000000000) + " Billion iterations completed!")
-            # PrintMap()
+            print( str(iterations) + "  iterations completed!")
+            PrintMap()
             print("\n\n")
             PrintPolicy()
             print("\n\n")
-            PrintQ()
-            c+=1
+            # PrintQ()
+            PrintExpectedReward()
+            c += 1
             if c % 10 == 0:
                 break
-
-
         iterations +=1 # Incrementing the i value!
+        # print(REWARD_GAINED)
 
 """_______________________END OF MAIN MODULE________________________"""
 
