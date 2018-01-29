@@ -1,2 +1,2 @@
-﻿# Q-Learning
-Reinforcement learning application on grid world
+﻿# Reinforcement learning using Q Learning
+ 
